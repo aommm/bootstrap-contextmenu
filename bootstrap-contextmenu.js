@@ -38,7 +38,14 @@
 	var ContextMenu = function (elements, options) {
 			this.$elements = $(elements)
 			this.options = options
-			this.before = this.options.before || this.before
+
+			var _this = this;
+			if (this.options.before) {
+				this.before = function(e, element) {
+					_this.$element = element;
+					return _this.options.before();
+				}
+			}
 			this.onItem = this.options.onItem || this.onItem
 			if (this.options.target)
 				this.$elements.attr('data-target',this.options.target)
@@ -78,11 +85,12 @@
 			this.getMenu().removeClass('open');
 		}
 
-		,before: function(e) {
+		,before: function(e, element) {
+			this.$element = element;
 			return true;
 		}
 
-		,onItem: function(e, context) {
+		,onItem: function(e, item, element) {
 			return true;
 		}
 
